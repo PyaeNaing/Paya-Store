@@ -15,14 +15,28 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Copyright} from '../Copyright/Copyright'
 
+import { useSelector , useDispatch} from 'react-redux';
+import {AuthState} from '../../redux/auth/authReducer'
+
 const theme = createTheme();
 
+
 export default function SignIn() {
+  const dispatch = useDispatch();
+
+  const auth = useSelector <AuthState> ((state) => state.auth)
+
+  const login = (auth:boolean) => {
+    dispatch({type: "LOGIN", payload: auth})
+  }
+  
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
+    
     console.log({
+      auth,
       email: data.get('email'),
       password: data.get('password'),
     });
@@ -79,6 +93,7 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">

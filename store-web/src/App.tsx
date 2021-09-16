@@ -8,8 +8,8 @@ import {
   useParams,
 } from "react-router-dom";
 
-import Login from "./Components/Login/Login";
-import SignUp from "./Components/SignUp/SignUp";
+import Login from "./components/Login/Login";
+import SignUp from "./components/SignUp/SignUp";
 
 function App() {
   return (
