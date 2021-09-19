@@ -1,6 +1,7 @@
 package com.paya.store.storerest.Model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name="user")
@@ -9,12 +10,16 @@ public class User {
     @Id
     @GeneratedValue
     private long id;
+    @NotBlank(message = "First name is required")
     @Column(name="firstname")
     private String firstName;
+    @NotBlank(message = "Last name is required")
     @Column(name="lastname")
     private String lastName;
+    @NotBlank(message = "Username is required")
     @Column(name="username")
     private String username;
+    @NotBlank(message = "Password is required")
     @Column(name="password")
     private String password;
 
