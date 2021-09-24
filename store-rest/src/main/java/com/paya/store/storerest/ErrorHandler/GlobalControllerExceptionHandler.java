@@ -12,10 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 class GlobalControllerExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)  // 409
+
+
+    @ResponseStatus(value=HttpStatus.CONFLICT,
+            reason="Data integrity violation")  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleConflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
+    public void handleConflict(HttpServletRequest req, DataIntegrityViolationException e) {
     }
 
+    @ResponseStatus(value=HttpStatus.BAD_REQUEST,
+            reason="Bad Request")
+    @ExceptionHandler(Exception.class)
+    public void handleError(HttpServletRequest req, Exception ex) {
+    }
 }

@@ -13,16 +13,26 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Copyright } from "../Copyright/Copyright";
-
-import axios from "axios"
+import axios from "axios";
 
 const theme = createTheme();
 
 export default function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    
+    axios
+      .get("http://localhost:8080/auth/")
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
+
     console.log({
       email: data.get("email"),
       password: data.get("password"),
@@ -79,10 +89,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
                 />
               </Grid>
               <Grid item xs={12}>
