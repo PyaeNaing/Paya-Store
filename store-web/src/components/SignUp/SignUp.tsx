@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { isValidElement, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,25 +18,44 @@ import axios from "axios";
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    
+  
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+
+  const isValid = async () => {
+    return !(
+      firstName.trim().length === 0 ||
+      lastName.trim().length === 0 ||
+      username.trim().length === 0 ||
+      password.trim().length === 0
+    )
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if(await isValid()){
     axios
-      .get("http://localhost:8080/auth/")
+      .post("http://localhost:8080/auth/signUp", {
+        firstName,
+        lastName,
+        username,
+        password
+      })
       .then((res) => {
         console.log(res);
       })
       .catch((err) => {
+
         console.log(err);
       });
+    }
+    else {
 
-    event.preventDefault();
+    }
 
-    const data = new FormData(event.currentTarget);
-
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   return (
@@ -66,12 +85,14 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoComplete="fname"
-                  name="firstName"
                   required
                   fullWidth
+                  value={firstName}
+                  onChange={(event) => setFirstName(event.target.value)}
+                  error={firstName === ""}
                   id="firstName"
                   label="First Name"
+                  autoComplete="fname"
                   autoFocus
                 />
               </Grid>
@@ -79,9 +100,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  value={lastName}
+                  onChange={(event) => setLastName(event.target.value)}
+                  error={lastName === ""}
                   id="lastName"
                   label="Last Name"
-                  name="lastName"
                   autoComplete="lname"
                 />
               </Grid>
@@ -89,6 +112,9 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  error={username === ""}
                   id="username"
                   label="Username"
                   name="username"
@@ -99,6 +125,9 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  error={password === ""}
                   name="password"
                   label="Password"
                   type="password"
