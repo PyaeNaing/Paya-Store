@@ -17,11 +17,26 @@ import {
   Typography,
   Container,
   CircularProgress,
+  Modal,
 } from "@mui/material";
 import axios, { AxiosError } from "axios";
 import { useHistory } from "react-router";
 
 const { useState } = React;
+
+const style: any = {
+  marginBottom: "10px",
+  textAlign: "center",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const theme = createTheme();
 
@@ -39,6 +54,7 @@ export default function SignUp() {
   const [passwordValid, setPasswordValid] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const [usernameError, setUsernameError] = useState(false);
 
@@ -68,28 +84,61 @@ export default function SignUp() {
           password,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          setShowModal(true);
           setLoading(false);
         })
         .catch((err: AxiosError): void => {
           if (err.response) {
             setUsernameError(true);
             setLoading(false);
-            console.log(err.response.status);
+            // console.log(err.response.status);
           }
         });
-    } else {
     }
   };
 
-  return (
-    <React.Fragment>
+  const SuccessModal = () => {
+    return (
+      <Modal
+        open={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Alert severity="success">Account successfully created. </Alert>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ marginTop: "25px" }}
+            onClick={()=>{
+              history.push("/")
+            }}
+          >
+            Ok!
+          </Button>
+        </Box>
+      </Modal>
+    );
+  };
+
+  const BackDrop = () => {
+    return (
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+    );
+  };
+  return (
+    <React.Fragment>
+      <SuccessModal />
+      <BackDrop/>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
