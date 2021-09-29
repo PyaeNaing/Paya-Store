@@ -53,6 +53,8 @@ export default function SignUp() {
   const [usernameValid, setUsernameValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -84,7 +86,7 @@ export default function SignUp() {
           password,
         })
         .then((res) => {
-          // console.log(res);
+          console.log(res);
           setShowModal(true);
           setLoading(false);
         })
@@ -114,14 +116,22 @@ export default function SignUp() {
             variant="contained"
             color="success"
             sx={{ marginTop: "25px" }}
-            onClick={()=>{
-              history.push("/")
+            onClick={() => {
+              history.push("/");
             }}
           >
             Ok!
           </Button>
         </Box>
       </Modal>
+    );
+  };
+
+  const ErrorModal = () => {
+    return (
+      <Grid item xs={12}>
+        <Alert severity="error">Username already Taken!</Alert>
+      </Grid>
     );
   };
 
@@ -138,7 +148,7 @@ export default function SignUp() {
   return (
     <React.Fragment>
       <SuccessModal />
-      <BackDrop/>
+      <BackDrop />
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -179,6 +189,7 @@ export default function SignUp() {
                     error={firstNameValid}
                     helperText={firstNameValid && "First name is required"}
                     id="firstName"
+                    inputProps={{ "data-testid": "test-firstName" }}
                     label="First Name"
                     autoComplete="fname"
                     autoFocus
@@ -191,8 +202,9 @@ export default function SignUp() {
                     value={lastName}
                     onChange={(event) => setLastName(event.target.value)}
                     error={lastNameValid}
-                    helperText={lastNameValid && "Lase name is required"}
+                    helperText={lastNameValid && "Last name is required"}
                     id="lastName"
+                    inputProps={{ "data-testid": "test-lastName" }}
                     label="Last Name"
                     autoComplete="lname"
                   />
@@ -206,6 +218,7 @@ export default function SignUp() {
                     error={usernameValid}
                     helperText={usernameValid && "Username is required"}
                     id="username"
+                    inputProps={{ "data-testid": "test-username" }}
                     label="Username"
                     name="username"
                     autoComplete="username"
@@ -220,6 +233,7 @@ export default function SignUp() {
                     error={passwordValid}
                     helperText={passwordValid && "Password is required"}
                     name="password"
+                    inputProps={{ "data-testid": "test-password" }}
                     label="Password"
                     type="password"
                     id="password"

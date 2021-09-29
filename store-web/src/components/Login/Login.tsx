@@ -1,4 +1,3 @@
-  
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -18,11 +17,16 @@ import {Copyright} from '../Copyright/Copyright'
 import { useSelector , useDispatch} from 'react-redux';
 import {AuthState} from '../../redux/auth/authReducer'
 
+const { useState } = React;
+
 const theme = createTheme();
 
 
 export default function SignIn() {
   const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const auth = useSelector <AuthState> ((state) => state.auth)
 
