@@ -58,7 +58,8 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const [usernameError, setUsernameError] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const isValid = async () => {
     setFirstNameValid(firstName.trim().length === 0);
@@ -86,16 +87,23 @@ export default function SignUp() {
           password,
         })
         .then((res) => {
-          console.log(res);
           setShowModal(true);
           setLoading(false);
         })
         .catch((err: AxiosError): void => {
           if (err.response) {
-            setUsernameError(true);
-            setLoading(false);
-            // console.log(err.response.status);
+            if (err.response.status === 409) {
+              setErrorMessage("Username is already taken");
+            } else {
+              setErrorMessage("Server encountered an unexpected error");
+            }
+          } else {
+            setErrorMessage(
+              "Could not connect to server, please try again later"
+            );
           }
+          setShowError(true);
+          setLoading(false);
         });
     }
   };
@@ -127,10 +135,10 @@ export default function SignUp() {
     );
   };
 
-  const ErrorModal = () => {
+  const ErrorModal = (errorMessage:String) => {
     return (
       <Grid item xs={12}>
-        <Alert severity="error">Username already Taken!</Alert>
+        <Alert severity="error">{errorMessage}</Alert>
       </Grid>
     );
   };
@@ -174,11 +182,7 @@ export default function SignUp() {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                {usernameError && (
-                  <Grid item xs={12}>
-                    <Alert severity="error">Username already Taken!</Alert>
-                  </Grid>
-                )}
+                {showError && ErrorModal(errorMessage)}
 
                 <Grid item xs={12} sm={6}>
                   <TextField
