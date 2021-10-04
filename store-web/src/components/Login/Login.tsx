@@ -1,26 +1,27 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Copyright} from '../Copyright/Copyright'
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Copyright } from "../Copyright/Copyright";
 
-import { useSelector , useDispatch} from 'react-redux';
-import {AuthState} from '../../redux/auth/authReducer'
+import axios from 'axios';
+
+import { useSelector, useDispatch } from "react-redux";
+import { AuthState } from "../../redux/auth/authReducer";
 
 const { useState } = React;
 
 const theme = createTheme();
-
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -28,22 +29,29 @@ export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const auth = useSelector <AuthState> ((state) => state.auth)
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(false);
 
-  const login = (auth:boolean) => {
-    dispatch({type: "LOGIN", payload: auth})
-  }
+  const auth = useSelector<AuthState>((state) => state.auth);
+
   
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const isValid = async () => {
+    setUsernameValid(username.trim().length === 0);
+    setPasswordValid(password.trim().length === 0);
+
+    return !(
+      username.trim().length === 0 ||
+      password.trim().length === 0
+    );
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    
-    console.log({
-      auth,
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    if (await isValid()) {
+      dispatch({ type: "LOGIN", payload: true });
+      console.log(auth);
+    }
   };
 
   return (
@@ -53,37 +61,52 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              error={usernameValid}
+              helperText={usernameValid && "Username is required"}
+              id="username"
+              inputProps={{ "data-testid": "test-username" }}
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
               margin="normal"
               required
               fullWidth
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              error={passwordValid}
+              helperText={passwordValid && "Password is required"}
               name="password"
+              inputProps={{ "data-testid": "test-password" }}
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

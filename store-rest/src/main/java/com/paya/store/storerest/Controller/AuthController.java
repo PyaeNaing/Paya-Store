@@ -24,6 +24,11 @@ public class AuthController {
         return new ResponseEntity(userService.createUser(user), HttpStatus.CREATED);
     }
 
+    @PostMapping("/logIn")
+    public ResponseEntity<Object>logIn(final @Valid @RequestBody User user){
+        return new ResponseEntity(userService.createUser(user), HttpStatus.CREATED);
+    }
+
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<User>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());

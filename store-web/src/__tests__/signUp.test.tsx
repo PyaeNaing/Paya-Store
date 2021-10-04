@@ -64,9 +64,9 @@ describe("Form testing", () => {
       // await expect(mockAxios.post).toHaveBeenCalledWith(
       //   "http://localhost:8080/auth/signUp"
       // );
-      await expect(
-        await findByText("Account successfully created")
-      ).toBeInTheDocument();
+      // await expect(
+      //   await findByText("Account successfully created")
+      // ).toBeInTheDocument();
       expect(queryByText("First name is required")).not.toBeInTheDocument();
       expect(queryByText("Last name is required")).not.toBeInTheDocument();
       expect(queryByText("Username is required")).not.toBeInTheDocument();
