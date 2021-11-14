@@ -1,6 +1,7 @@
 package com.paya.store.storerest.Controller;
 
 import com.paya.store.storerest.Model.User;
+import com.paya.store.storerest.Service.AuthService;
 import com.paya.store.storerest.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,24 +19,21 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<Object>signup(final @Valid @RequestBody User user){
-        return new ResponseEntity(userService.createUser(user), HttpStatus.CREATED);
+    public ResponseEntity<Object> signup(final @Valid @RequestBody User user) {
+        return authService.createUser(user);
     }
 
-    @PostMapping("/logIn")
-    public ResponseEntity<Object>logIn(final @Valid @RequestBody User user){
-        return new ResponseEntity(userService.createUser(user), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/getAllUsers")
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.ok(userService.getAllUsers());
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(final @RequestBody User user) {
+        return authService.login(user);
     }
 
     @GetMapping("/*")
-    public ResponseEntity<String> login(){
+    public ResponseEntity<String> greeting() {
         return ResponseEntity.ok("Hello World!");
     }
 

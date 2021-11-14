@@ -1,29 +1,12 @@
 package com.paya.store.storerest.Service;
-
 import com.paya.store.storerest.Model.User;
 import com.paya.store.storerest.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service("userService")
 public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    public User createUser(User user){
-        userRepository.save(user);
-        return user;
-    }
-
-    public List<User> getAllUsers(){
-        List<User> users = new ArrayList<>();
-        users.addAll(userRepository.findAll());
-        return users;
-    }
-
 
 }
