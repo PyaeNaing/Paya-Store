@@ -13,6 +13,7 @@ import {
   Link,
   TextField,
   FormControlLabel,
+  FormLabel,
   Checkbox,
   Typography,
   Container,
@@ -47,11 +48,13 @@ export default function SignUp() {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [checkboxValue, setCheckboxValue] = useState(false);
 
   const [firstNameValid, setFirstNameValid] = useState(false);
   const [lastNameValid, setLastNameValid] = useState(false);
   const [usernameValid, setUsernameValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+  const [checkboxValid, setCheckboxValid] = useState(true);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -59,19 +62,20 @@ export default function SignUp() {
   const [showModal, setShowModal] = useState(false);
 
   const [showError, setShowError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const isValid = async () => {
     setFirstNameValid(firstName.trim().length === 0);
     setLastNameValid(lastName.trim().length === 0);
     setUsernameValid(username.trim().length === 0);
     setPasswordValid(password.trim().length === 0);
+    setCheckboxValid(checkboxValue);
 
     return !(
       firstName.trim().length === 0 ||
       lastName.trim().length === 0 ||
       username.trim().length === 0 ||
-      password.trim().length === 0
+      password.trim().length === 0 ||
+      !checkboxValue
     );
   };
 
@@ -79,13 +83,14 @@ export default function SignUp() {
     event.preventDefault();
     if (await isValid()) {
       setLoading(true);
+      let data = {
+        "firstName" : firstName.toLocaleLowerCase().trim(),
+        "lastName" : lastName.toLocaleLowerCase().trim(),
+        "username" : username.toLocaleLowerCase().trim(),
+        "password" : password,
+      }
       axios
-        .post("http://localhost:8080/auth/signUp", {
-          firstName,
-          lastName,
-          username,
-          password,
-        })
+        .post("http://localhost:8080/auth/signUp", data)
         .then((res) => {
           setShowModal(true);
           setLoading(false);
@@ -135,7 +140,7 @@ export default function SignUp() {
     );
   };
 
-  const ErrorModal = (errorMessage:String) => {
+  const ErrorModal = (errorMessage: String) => {
     return (
       <Grid item xs={12}>
         <Alert severity="error">{errorMessage}</Alert>
@@ -246,14 +251,22 @@ export default function SignUp() {
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
+
                     control={
                       <Checkbox
                         required={true}
-                        value="allowExtraEmails"
+                        value={checkboxValue}
+                        onClick={(event) => {
+                          setCheckboxValue(!checkboxValue);
+                        }}
                         color="primary"
                       />
                     }
-                    label="I agreed with Terms and Conditions"
+                    label={
+                      <FormLabel error={!checkboxValid}>
+                        I agreed with Terms and Condition *
+                      </FormLabel>
+                    }
                   />
                 </Grid>
               </Grid>
